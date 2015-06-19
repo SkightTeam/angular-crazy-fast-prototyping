@@ -1,0 +1,15 @@
+{
+  "name": "Ionic + Auth0 sample with RefreshTokens",
+  "dependencies": {
+    "auth0-angular": "4.*",
+    "a0-angular-storage": ">= 0.0.11",
+    "angular-jwt": ">= 0.0.9",
+    "angularfire": ">=1.1.1"
+  },
+  "devDependencies": {
+    "ionic": "*"
+  },
+  "resolutions": {
+    "auth0.js": ">= 5.2.2"
+  }
+}

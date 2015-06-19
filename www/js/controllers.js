@@ -34,26 +34,58 @@ angular.module('starter.controllers', [])
     $scope.modal = modal;
   });
 
-  $scope.newFriend = {
-    name: '',
-    description: ''
-  };
-
   $scope.friends = Friends.all();
+
+  $scope.formData = {};
 
   $scope.showAddFriend = function() {
     $scope.modal.show();
   };
 
   $scope.addFriend = function() {
-    if(!$scope.newFriend.$id) {
-      Friends.add($scope.newFriend);
+    if(!$scope.formData.$id) {
+      Friends.add($scope.formData);
     } else {
-      Friends.save($scope.newFriend);
+      Friends.save($scope.formData);
     }
-    $scope.newFriend = {};
+    $scope.formData = {};
     $scope.modal.hide();
   };
+
+  
+  $scope.formFields = [
+      {
+          //the key to be used in the model values {... "username": "johndoe" ... }
+          key: 'name',
+          type: 'input',
+          templateOptions: {
+              type: 'text',
+              placeholder: 'Name',
+          }
+      },         
+      {
+          //the key to be used in the model values {... "username": "johndoe" ... }
+          key: 'description',
+          type: 'textarea',
+          templateOptions: {
+              placeholder: 'Description',
+          }
+      },{
+          key: 'coolLevel',
+          type: 'range',
+          templateOptions: {
+              label: 'Cool Level',
+              rangeClass: 'calm',
+              min: '0',
+              max: '100',
+              step: '5',
+              value: '25',
+              minIcon: 'ion-heart-broken',
+              maxIcon: 'ion-heart'
+          }
+      }
+
+  ];
 
   $scope.deleteFriend = function(friend) {
     Friends.delete(friend);

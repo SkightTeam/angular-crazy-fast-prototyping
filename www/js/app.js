@@ -11,6 +11,7 @@ angular.module('starter', ['ionic',
   'auth0',
   'angular-storage',
   'angular-jwt',
+  'formlyIonic',
   'firebase'])
 
 .run(function($ionicPlatform) {

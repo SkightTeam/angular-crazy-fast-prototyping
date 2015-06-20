@@ -26,7 +26,9 @@ angular.module('starter.controllers', [])
 })
 
 
-.controller('FriendsCtrl', function($scope, Friends, $ionicModal) {
+.controller('FriendsCtrl', function($scope, Friends, Camera, $ionicModal) {
+
+  //setting logic for ionic modal
  $ionicModal.fromTemplateUrl('templates/friend-add-modal.html', {
     scope: $scope,
     animation: 'slide-in-up'
@@ -35,8 +37,38 @@ angular.module('starter.controllers', [])
   });
 
   $scope.friends = Friends.all();
-
   $scope.formData = {};
+
+  //use phone camera to take image
+  $scope.takePhoto = function() {
+    Camera.getPicture({
+      sourceType:1,   //camera
+      destinationType:0,  //base64
+      saveToPhotoAlbum:false,
+      correctOrientation:true
+    })
+      .then(function(imageURI) {
+        $scope.imageURI = "data:image/jpeg;base64," + imageURI;
+        $scope.formData.image = "data:image/jpeg;base64," + imageURI;
+      }, function(err) {
+        console.error(err);
+      });
+    };
+    
+  $scope.selectPhoto = function(){
+    Camera.getPicture({
+      sourceType:0,   //photo album,
+      destinationType:0,  //base64
+      saveToPhotoAlbum:false,
+      correctOrientation:true
+    })
+      .then(function(imageURI) {
+        $scope.imageURI = "data:image/jpeg;base64," + imageURI;   
+        $scope.formData.image = "data:image/jpeg;base64," + imageURI;  
+      }, function(err) {
+          console.error(err);
+      });
+  };
 
   $scope.showAddFriend = function() {
     $scope.modal.show();
@@ -49,6 +81,13 @@ angular.module('starter.controllers', [])
       Friends.save($scope.formData);
     }
     $scope.formData = {};
+    $scope.imageURI = undefined;
+    $scope.modal.hide();
+  };
+
+  $scope.cancel = function(){
+    $scope.formData = {};
+    $scope.imageURI = undefined;
     $scope.modal.hide();
   };
 
@@ -71,10 +110,10 @@ angular.module('starter.controllers', [])
               placeholder: 'Description',
           }
       },{
-          key: 'coolLevel',
+          key: 'kindness',
           type: 'range',
           templateOptions: {
-              label: 'Cool Level',
+              label: 'Kindness',
               rangeClass: 'calm',
               min: '0',
               max: '100',

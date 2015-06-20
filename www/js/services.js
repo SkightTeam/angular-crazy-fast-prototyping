@@ -13,7 +13,6 @@ angular.module('starter.services', ['firebase'])
     }
   });
 
-  //var friendsSync = $firebase(friendsRef);
   var friends = $firebaseArray(friendsRef);
 
   this.all = function() {
@@ -36,4 +35,25 @@ angular.module('starter.services', ['firebase'])
     friends.$remove(friend);
   };
 
-});
+})
+.factory('Camera', ['$q', function($q) {
+
+
+  return {
+    
+    getPicture: function(options) {
+      var q = $q.defer();
+      if(navigator.camera != undefined){
+        navigator.camera.getPicture(function(result) {
+          q.resolve(result);
+        }, function(err) {
+          q.reject(err);
+        }, options);
+      }else{
+        q.reject(false);
+      }
+
+      return q.promise;
+    }
+  };
+}]);

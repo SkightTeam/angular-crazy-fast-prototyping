@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('ComplimentsCtrl', function($scope, $ionicModal, Compliments) {
+.controller('ComplimentsCtrl', function($scope, $ionicModal, Compliments, Camera) {
 
   $scope.formFields = [
     {
@@ -23,6 +23,37 @@ angular.module('starter.controllers', [])
   $scope.compliments = Compliments.all();
 
   $scope.newCompliment = {};
+
+  //use phone camera to take image
+  $scope.takePhoto = function() {
+    Camera.getPicture({
+      sourceType:1,   //camera
+      destinationType:0,  //base64
+      saveToPhotoAlbum:false,
+      correctOrientation:true
+    })
+      .then(function(imageURI) {
+        $scope.imageURI = "data:image/jpeg;base64," + imageURI;
+        $scope.newCompliment.image = "data:image/jpeg;base64," + imageURI;
+      }, function(err) {
+        console.error(err);
+      });
+    };
+    
+  $scope.selectPhoto = function(){
+    Camera.getPicture({
+      sourceType:0,   //photo album,
+      destinationType:0,  //base64
+      saveToPhotoAlbum:false,
+      correctOrientation:true
+    })
+      .then(function(imageURI) {
+        $scope.imageURI = "data:image/jpeg;base64," + imageURI;   
+        $scope.newCompliment.image = "data:image/jpeg;base64," + imageURI;  
+      }, function(err) {
+          console.error(err);
+      });
+  };
 
   //setting logic for ionic modal
  $ionicModal.fromTemplateUrl('templates/compliment-add-modal.html', {

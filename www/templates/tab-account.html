@@ -1,9 +1,6 @@
 <ion-view view-title="Account">
   <ion-content>
-    <ion-list>
-    <ion-toggle  ng-model="settings.enableFriends">
-        Enable Friends
-    </ion-toggle>
-    </ion-list>
+    <input ng-if="!authenticated" type="submit" class="button-block button-positive button" value="Login" ng-click="login()" />
+    <input ng-if="authenticated" type="submit" ng-click="logout()" value="Log out" class="button-block button-positive button"/>
   </ion-content>
 </ion-view>

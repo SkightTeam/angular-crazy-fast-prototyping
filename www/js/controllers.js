@@ -61,8 +61,40 @@ angular.module('starter.controllers', [])
   console.log($scope.compliment, $stateParams);
 })
 
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
+.controller('AccountCtrl', function(store, $scope, $location, auth, $state) {
+
+  
+
+  $scope.authenticated = auth.isAuthenticated;
+
+  console.log('authenticated> ', $scope.authenticated);
+
+  $scope.login = function() {
+    auth.signin({
+      authParams: {
+        scope: 'openid offline_access',
+        device: 'Mobile device'
+      }
+    }, function(profile, token, accessToken, state, refreshToken) {
+
+      $scope.authenticated = true;
+      // Success callback
+      store.set('profile', profile);
+      store.set('token', token);
+      store.set('refreshToken', refreshToken);
+      //$location.path('/');
+      $state.go('tab.compliments');
+      
+    }, function() {
+      // Error callback
+    });
   };
+
+  $scope.logout = function() {
+    auth.signout();
+    store.remove('profile');
+    store.remove('token');
+    $scope.authenticated = false;
+  };
+
 });

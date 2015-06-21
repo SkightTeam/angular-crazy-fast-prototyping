@@ -5,9 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'formlyIonic', 'firebase'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'formlyIonic', 'firebase', 'auth0', 'angular-storage', 'angular-jwt'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope, auth, store, jwtHelper, $location, $state) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -19,9 +19,62 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       StatusBar.styleLightContent();
     }
   });
+
+  // This hooks all auth events to check everything as soon as the app starts
+  auth.hookEvents();
+
+  // This events gets triggered on refresh or URL change
+  var refreshingToken = null;
+  $rootScope.$on('$locationChangeStart', function() {
+    var token = store.get('token');
+    var refreshToken = store.get('refreshToken');
+    if (token) {
+      if (!jwtHelper.isTokenExpired(token)) {
+        if (!auth.isAuthenticated) {
+          auth.authenticate(store.get('profile'), token);
+        }
+      } else {
+        if (refreshToken) {
+          if (refreshingToken === null) {
+              refreshingToken =  auth.refreshIdToken(refreshToken).then(function(idToken) {
+                store.set('token', idToken);
+                auth.authenticate(store.get('profile'), idToken);
+              }).finally(function() {
+                  refreshingToken = null;
+              });
+          }
+          return refreshingToken;
+        } else {
+          $state.go('tabs.account');
+        }
+      }
+    }
+  });
+
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, authProvider, $httpProvider,
+  jwtInterceptorProvider) {
+
+  jwtInterceptorProvider.tokenGetter = function(store, jwtHelper, auth) {
+    var idToken = store.get('token');
+    var refreshToken = store.get('refreshToken');
+    // If no token return null
+    if (!idToken || !refreshToken) {
+      return null;
+    }
+    // If token is expired, get a new one
+    if (jwtHelper.isTokenExpired(idToken)) {
+      return auth.refreshIdToken(refreshToken).then(function(idToken) {
+        store.set('token', idToken);
+        return idToken;
+      });
+    } else {
+      return idToken;
+    }
+  }
+
+  $httpProvider.interceptors.push('jwtInterceptor');
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
@@ -47,6 +100,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
           templateUrl: 'templates/tab-compliments.html',
           controller: 'ComplimentsCtrl'
         }
+      },
+      data: {
+        // This tells Auth0 that this state requires the user to be logged in.
+        // If the user isn't logged in and he tries to access this state
+        // he'll be redirected to the login page
+        requiresLogin: true
       }
     })
     .state('tab.compliments-detail', {
@@ -56,6 +115,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
           templateUrl: 'templates/compliments-detail.html',
           controller: 'ComplimentsDetailCtrl'
         }
+      },
+      data: {
+        // This tells Auth0 that this state requires the user to be logged in.
+        // If the user isn't logged in and he tries to access this state
+        // he'll be redirected to the login page
+        requiresLogin: true
       }
     })
 
@@ -69,6 +134,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
   })
   ;
+
+  authProvider.init({
+    domain: 'angularu.auth0.com',
+    clientID: 'yp0UIH0pbIqX4IqtsGsBfeeRXv30lnyy',
+    loginState: 'tab.account'
+  });
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/account');

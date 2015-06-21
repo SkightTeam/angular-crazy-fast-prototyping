@@ -1,6 +1,6 @@
 angular.module('starter.services', [])
 
-.factory('Compliments', function($firebaseArray) {
+.factory('Compliments', function($firebaseArray, store, $state) {
   // Might use a resource here that returns a JSON array
 
   // Some fake testing data
@@ -11,6 +11,13 @@ angular.module('starter.services', [])
   }];
 
   var complimentsRef = new Firebase("https://angularu2015.firebaseio.com/compliments");
+
+  // complimentsRef.authWithCustomToken(store.get('firebaseToken'), function(error, auth) {
+  //   if (error) {
+  //     // There was an error logging in, redirect the user to login page
+  //     $state.go('tab.account');
+  //   }
+  // });
 
   var compliments = $firebaseArray(complimentsRef);
 

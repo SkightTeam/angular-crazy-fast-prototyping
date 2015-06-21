@@ -5,31 +5,23 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic',
-  'starter.controllers',
-  'starter.services',
-  'auth0',
-  'angular-storage',
-  'angular-jwt',
-  'formlyIonic',
-  'firebase'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
-    if(window.cordova && window.cordova.plugins.Keyboard) {
+    if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
     }
-    if(window.StatusBar) {
+    if (window.StatusBar) {
       // org.apache.cordova.statusbar required
-      StatusBar.styleDefault();
+      StatusBar.styleLightContent();
     }
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider, authProvider, $httpProvider,
-  jwtInterceptorProvider) {
+.config(function($stateProvider, $urlRouterProvider) {
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
@@ -37,91 +29,48 @@ angular.module('starter', ['ionic',
   // Each state's controller can be found in controllers.js
   $stateProvider
 
-    // This is the Login state
-    .state('login', {
-      url: "/login",
-      templateUrl: "templates/login.html",
-      controller: "LoginCtrl"
-    })
-
-    // setup an abstract state for the tabs directive
+  // setup an abstract state for the tabs directive
     .state('tab', {
-      url: "/tab",
-      abstract: true,
-      templateUrl: "templates/tabs.html",
-      // The tab requires user login
-      data: {
-        requiresLogin: true
-      }
-    })
+    url: "/tab",
+    abstract: true,
+    templateUrl: "templates/tabs.html"
+  })
 
-    // Each tab has its own nav history stack:
-
-    .state('tab.friends', {
-      url: '/friends',
+  /*
+  * we repurposed chats and chat-detail because it is closest to what we
+  * want to do
+  */
+  .state('tab.compliments', {
+      url: '/compliments',
       views: {
-        'tab-friends': {
-          templateUrl: 'templates/tab-friends.html',
-          controller: 'FriendsCtrl'
+        'tab-compliments': {
+          templateUrl: 'templates/tab-compliments.html',
+          controller: 'ComplimentsCtrl'
         }
       }
     })
-    .state('tab.friend-detail', {
-      url: '/friend/:friendId',
+    .state('tab.compliments-detail', {
+      url: '/compliments/:complimentsId',
       views: {
-        'tab-friends': {
-          templateUrl: 'templates/friend-detail.html',
-          controller: 'FriendDetailCtrl'
+        'tab-compliments': {
+          templateUrl: 'templates/compliments-detail.html',
+          controller: 'ComplimentsDetailCtrl'
         }
       }
     })
 
-    .state('tab.account', {
-      url: '/account',
-      views: {
-        'tab-account': {
-          templateUrl: 'templates/tab-account.html',
-          controller: 'AccountCtrl'
-        }
+  .state('tab.account', {
+    url: '/account',
+    views: {
+      'tab-account': {
+        templateUrl: 'templates/tab-account.html',
+        controller: 'AccountCtrl'
       }
-    });
-
-
-  // Configure Auth0
-  authProvider.init({
-    domain: AUTH0_DOMAIN,
-    clientID: AUTH0_CLIENT_ID,
-    loginState: 'login'
-  });
+    }
+  })
+  ;
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/friends');
+  $urlRouterProvider.otherwise('/tab/account');
 
-  jwtInterceptorProvider.tokenGetter = function(store, jwtHelper, auth) {
-    var idToken = store.get('token');
-    var refreshToken = store.get('refreshToken');
-    if (!idToken || !refreshToken) {
-      return null;
-    }
-    if (jwtHelper.isTokenExpired(idToken)) {
-      return auth.refreshIdToken(refreshToken).then(function(idToken) {
-        store.set('token', idToken);
-        return idToken;
-      });
-    } else {
-      return idToken;
-    }
-  }
-
-  $httpProvider.interceptors.push('jwtInterceptor');
-}).run(function($rootScope, auth, store) {
-  $rootScope.$on('$locationChangeStart', function() {
-    if (!auth.isAuthenticated) {
-      var token = store.get('token');
-      if (token) {
-        auth.authenticate(store.get('profile'), token);
-      }
-    }
-
-  });
 });

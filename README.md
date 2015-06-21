@@ -1,16 +1,10 @@
 # AngularU
 Make Your Angular App a Maximum Security Prison
 
-`$ npm install -g cordova ionic`
+`$ ionic upload`
 
-`$ ionic start myApp tabs`
+Download Ionic View onto your phone and sync your account
 
-Use existing files as template for creating our new view
-Delete files/states we aren't using
+or signup online
 
-`$ ionic serve`
-
-`$ ionic platform add ios`
-
-`$ ionic ios run`
-
+https://apps.ionic.io/signup

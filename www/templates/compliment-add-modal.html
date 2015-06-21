@@ -6,16 +6,12 @@
     <h1 class="title">Make A New Compliment!</h1>
   </ion-header-bar>
   <ion-content class="padding">
-    <div class="list">
-      <label class="item item-input">
-        <input type="text" placeholder="First Name" ng-model="newCompliment.name">
-      </label>
-      <label class="item item-input">
-        <textarea placeholder="Comments" ng-model="newCompliment.description"></textarea>
-      </label>
-      <button class="button button-block button-positive" ng-click="save()">
-        save
-      </button>
-    </div>
+    <form >
+      <formly-form model="newCompliment" fields="formFields">
+        <button class="button button-block button-positive" ng-click="save()">
+          Save
+        </button>
+      </formly-form>
+    </form>
   </ion-content>
 </ion-modal-view>

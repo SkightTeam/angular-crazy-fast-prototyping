@@ -2,6 +2,24 @@ angular.module('starter.controllers', [])
 
 .controller('ComplimentsCtrl', function($scope, $ionicModal, Compliments) {
 
+  $scope.formFields = [
+    {
+      key: 'name',
+      type: 'input',
+      templateOptions: {
+        type:'text',
+        placeholder: 'Name'
+      }
+    },
+    {
+      key: 'description',
+      type: 'textarea',
+      templateOptions: {
+        placeholder: 'Comments'
+      }
+    }
+  ];
+
   $scope.compliments = Compliments.all();
 
   $scope.newCompliment = {};

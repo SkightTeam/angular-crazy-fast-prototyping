@@ -6,7 +6,7 @@
   </ion-nav-buttons>
   <ion-content class="has-header">
     <ion-list>
-      <ion-item ng-repeat="compliment in compliments" type="item-text-wrap" href="#/tab/compliments/{{compliment.id}}">
+      <ion-item ng-repeat="compliment in compliments" type="item-text-wrap" href="#/tab/compliments/{{compliment.$id}}">
         {{compliment.name}}
       </ion-item>
     </ion-list>

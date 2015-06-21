@@ -7,6 +7,8 @@
   "dependencies": {
     "api-check": "~7.4.0",
     "angular-formly": "~6.15.1",
-    "angular-formly-templates-ionic": "~0.3.0"
+    "angular-formly-templates-ionic": "~0.3.0",
+    "firebase": "~2.2.7",
+    "angularfire": "~1.1.1"
   }
 }

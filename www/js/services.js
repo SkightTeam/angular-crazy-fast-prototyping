@@ -1,6 +1,6 @@
 angular.module('starter.services', [])
 
-.factory('Compliments', function() {
+.factory('Compliments', function($firebaseArray) {
   // Might use a resource here that returns a JSON array
 
   // Some fake testing data
@@ -10,6 +10,10 @@ angular.module('starter.services', [])
     description: 'Kindly help the door open'
   }];
 
+  var complimentsRef = new Firebase("https://angularu2015.firebaseio.com/compliments");
+
+  var compliments = $firebaseArray(complimentsRef);
+
   return {
     all: function() {
       return compliments;
@@ -18,17 +22,10 @@ angular.module('starter.services', [])
       compliments.splice(compliments.indexOf(compliment), 1);
     },
     add: function(compliment){
-      var newId = compliments.length;
-      compliment.id = newId;
-      compliments.push(compliment);
+      compliments.$add(compliment);
     },
     get: function(complimentId) {
-      for (var i = 0; i < compliments.length; i++) {
-        if (compliments[i].id === parseInt(complimentId)) {
-          return compliments[i];
-        }
-      }
-      return null;
+      return compliments.$getRecord(complimentId);
     }
   };
 });

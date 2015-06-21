@@ -1,31 +1,23 @@
 # AngularU
 Make Your Angular App a Maximum Security Prison
 
-### Install Formly with Bower
+### Firebase
+
+https://www.firebase.com/docs/web/libraries/angular/quickstart.html
 
 ```bash
-$ bower install api-check angular-formly angular-formly-templates-ionic --save
+bower install firebase angularfire
 ```
-
-Reference the files in your `index.html`
 
 ```html
-<!-- right below ionic.bundle.js -->
-<script src="lib/api-check/dist/api-check.js"></script>
-<script src="lib/angular-formly/dist/formly.js"></script>
-<script src="lib/angular-formly-templates-ionic/dist/angular-formly-templates-ionic.js"></script>
+<script src="lib/firebase/firebase.js"></script>
+<script src="lib/angularfire/dist/angularfire.js"></script>
 ```
 
-Then import the templates into your project.
-
-```javascript
-angular.module('myApp', ['ionic', 'formlyIonic'])
+```js
+var app = angular.module("sampleApp", ["firebase"]);
 ```
 
-Add formField configuration to controller
+In our example app we utilize `$firebaseArray`
 
-Add formly directive to partial
-
-We are using a version of Formly tailored for Ionic
-
-http://formly-js.github.io/angular-formly-templates-ionic/#/
+https://www.firebase.com/docs/web/libraries/angular/api.html#angularfire-firebasearray

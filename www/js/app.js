@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'formlyIonic', 'firebase', 'auth0', 'angular-storage', 'angular-jwt'])
+angular.module('complimeme', ['ionic', 'starter.controllers', 'starter.services', 'formlyIonic', 'firebase', 'auth0', 'angular-storage', 'angular-jwt'])
 
 .run(function($ionicPlatform, $rootScope, auth, store, jwtHelper, $location, $state) {
   $ionicPlatform.ready(function() {

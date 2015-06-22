@@ -2,7 +2,6 @@ angular.module('starter.controllers', [])
 
 .controller('ComplimentsCtrl', function($scope, $ionicModal, Compliments) {
 
-
   $scope.formFields = [
     {
       key: 'name',

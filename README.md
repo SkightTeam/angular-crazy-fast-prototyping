@@ -1,5 +1,6 @@
 # AngularU
-Make Your Angular App a Maximum Security Prison
+
+Crazy Fast Prototyping
 
 `$ ionic upload`
 

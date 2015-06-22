@@ -1,185 +1,134 @@
 # AngularU
 Make Your Angular App a Maximum Security Prison
 
-### Auth0
+### Cordova Plugins
 
-#### Setting up the callback URL in Auth0
-
-```
-https://angularu.auth0.com/mobile
-```
-
-#### Adding Auth0 dependencies
+#### Add Cordova Camera Plugin
 
 ```
-bower install auth0-angular a0-angular-storage angular-jwt --save
+cordova plugin add org.apache.cordova.camera
 ```
 
-#### Add the references to the scripts in the `index.html`
+#### Create Camera Service
 
-```html
-<!-- Auth0 Lock -->
-<script src="lib/auth0-lock/build/auth0-lock.js"></script>
-<!-- auth0-angular -->
-<script src="lib/auth0-angular/build/auth0-angular.js"></script>
-<!-- angular storage -->
-<script src="lib/a0-angular-storage/dist/angular-storage.js"></script>
-<!-- angular-jwt -->
-<script src="lib/angular-jwt/dist/angular-jwt.js"></script>
-```
-
-#### `InAppBrowser` plugin
-
-```
-ionic plugin add org.apache.cordova.inappbrowser
-```
-
-add the following to `config.xml` file
-
-```xml
-<feature name="InAppBrowser">
-  <param name="ios-package" value="CDVInAppBrowser" />
-  <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser" />
-</feature>
-```
-
-#### Add the module dependency and configure the service
-
-```
-// app.js
-angular.module('starter', ['ionic',
-  'starter.controllers',
-  'starter.services',
-  'auth0',
-  'angular-storage',
-  'angular-jwt'])
-.config(function($stateProvider, $urlRouterProvider, authProvider, $httpProvider,
-  jwtInterceptorProvider) {
+```js
+.factory('Camera', ['$q', function($q) {
 
 
-  $stateProvider
-  // This is the state where you'll show the login
-  .state('login', {
-    url: '/login',
-    templateUrl: 'templates/login.html',
-    controller: 'LoginCtrl',
-  })
-  // Your app states
-  .state('dashboard', {
-    url: '/dashboard',
-    templateUrl: 'templates/dashboard.html',
-    data: {
-      // This tells Auth0 that this state requires the user to be logged in.
-      // If the user isn't logged in and he tries to access this state
-      // he'll be redirected to the login page
-      requiresLogin: true
-    }
-  })
-
-  ...
-
-  authProvider.init({
-    domain: 'angularu.auth0.com',
-    clientID: 'yp0UIH0pbIqX4IqtsGsBfeeRXv30lnyy',
-    loginState: 'login'
-  });
-
-  ...
-
-})
-.run(function(auth) {
-  // This hooks all auth events to check everything as soon as the app starts
-  auth.hookEvents();
-});
-```
-#### Implement login in AccountCtrl
-
-```
-$scope.login = function() {
-	auth.signin({
-	  authParams: {
-	    scope: 'openid offline_access',
-	    device: 'Mobile device'
-	  }
-	}, function(profile, token, accessToken, state, refreshToken) {
-	  // Success callback
-	  store.set('profile', profile);
-	  store.set('token', token);
-	  store.set('refreshToken', refreshToken);
-	  $location.path('/');
-	}, function() {
-	  // Error callback
-	});
-}
-```
-
-And initialize widget in template
-
-```html
-<input type="submit" ng-click="login()" />
-```
-
-#### Configuring secure calls to Firebase
-
-```
-// app.js
-myApp.config(function (authProvider, $routeProvider, $httpProvider, jwtInterceptorProvider) {
-  // ...
-
-  jwtInterceptorProvider.tokenGetter = function(store, jwtHelper, auth) {
-    var idToken = store.get('token');
-    var refreshToken = store.get('refreshToken');
-    // If no token return null
-    if (!idToken || !refreshToken) {
-      return null;
-    }
-    // If token is expired, get a new one
-    if (jwtHelper.isTokenExpired(idToken)) {
-      return auth.refreshIdToken(refreshToken).then(function(idToken) {
-        store.set('token', idToken);
-        return idToken;
-      });
-    } else {
-      return idToken;
-    }
-  }
-
-  $httpProvider.interceptors.push('jwtInterceptor');
-  // ...
-});
-```
-#### Keeping user logged in on page refresh
-
-```
-angular.module('myApp', ['auth0', 'angular-storage', 'angular-jwt'])
-.run(function($rootScope, auth, store, jwtHelper, $location) {
-  // This events gets triggered on refresh or URL change
-  var refreshingToken = null;
-  $rootScope.$on('$locationChangeStart', function() {
-    var token = store.get('token');
-    var refreshToken = store.get('refreshToken');
-    if (token) {
-      if (!jwtHelper.isTokenExpired(token)) {
-        if (!auth.isAuthenticated) {
-          auth.authenticate(store.get('profile'), token);
-        }
-      } else {
-        if (refreshToken) {
-          if (refreshingToken === null) {
-              refreshingToken =  auth.refreshIdToken(refreshToken).then(function(idToken) {
-                store.set('token', idToken);
-                auth.authenticate(store.get('profile'), idToken);
-              }).finally(function() {
-                  refreshingToken = null;
-              });
-          }
-          return refreshingToken;
-        } else {
-          $location.path('/login');
-        }
+  return {
+    
+    getPicture: function(options) {
+      var q = $q.defer();
+      if(navigator.camera != undefined){
+        navigator.camera.getPicture(function(result) {
+          q.resolve(result);
+        }, function(err) {
+          q.reject(err);
+        }, options);
+      }else{
+        q.reject(false);
       }
-    }
 
-  });
-});
+      return q.promise;
+    }
+  };
+}]);
+```
+
+#### Add logic to controller
+
+```js
+//use phone camera to take image
+  $scope.takePhoto = function() {
+    Camera.getPicture({
+      sourceType:1,   //camera
+      destinationType:0,  //base64
+      saveToPhotoAlbum:false,
+      correctOrientation:true
+    })
+      .then(function(imageURI) {
+        $scope.imageURI = "data:image/jpeg;base64," + imageURI;
+        $scope.newCompliment.image = "data:image/jpeg;base64," + imageURI;
+      }, function(err) {
+        console.error(err);
+      });
+    };
+    
+  $scope.selectPhoto = function(){
+    Camera.getPicture({
+      sourceType:0,   //photo album,
+      destinationType:0,  //base64
+      saveToPhotoAlbum:false,
+      correctOrientation:true
+    })
+      .then(function(imageURI) {
+        $scope.imageURI = "data:image/jpeg;base64," + imageURI;   
+        $scope.newCompliment.image = "data:image/jpeg;base64," + imageURI;  
+      }, function(err) {
+          console.error(err);
+      });
+  };
+```
+
+#### Update templates
+
+```html
+<!-- add comliment -->
+<ion-modal-view>
+  <ion-header-bar>
+    <div class="buttons">
+      <button class="button ion-close-round button-clear" ng-click="close()"></button>
+    </div>
+    <h1 class="title">Make A New Compliment!</h1>
+  </ion-header-bar>
+  <ion-content class="padding">
+    <form >
+      <formly-form model="newCompliment" fields="formFields">
+        <div class="row">
+          <div class="col">
+            <button class="button button-block" ng-click="takePhoto()">Take A Photo</button>
+          </div>
+          <div class="col">
+            <button class="button button-block" ng-click="selectPhoto()">Choose A Photo</button>
+          </div>
+        </div>
+        <button class="button button-block button-positive" ng-click="save()">
+          Save
+        </button>
+      </formly-form>
+    </form>
+    <div class="friend-photo">
+        <img ng-src="{{imageURI}}" ng-if="imageURI">
+    </div>
+  </ion-content>
+</ion-modal-view>
+
+<!-- comliment detail -->
+<ion-view title="{{compliment.name}}">
+  <ion-content has-header="true" padding="true">
+    <div class="list card">
+
+      <div class="item item-avatar">
+        <img ng-src="{{compliment.image}}">
+        <h2>{{compliment.name}}</h2>
+      </div>
+
+      <div class="item item-body">
+        <p>
+          {{compliment.description}}
+        </p>
+      </div>
+
+    </div>
+  </ion-content>
+</ion-view>
+```
+
+### Add custom styles
+
+```css
+.friend-photo img {
+	max-width: 100%;
+	height: auto;
+}
 ```

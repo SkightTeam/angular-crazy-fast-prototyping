@@ -4,19 +4,34 @@ angular.module('starter.controllers', [])
 
   $scope.formFields = [
     {
-      key: 'name',
-      type: 'input',
-      templateOptions: {
-        type:'text',
-        placeholder: 'Name'
-      }
+        key: 'name',
+        type: 'input',
+        templateOptions: {
+            type: 'text',
+            placeholder: 'Name'
+        }
     },
     {
-      key: 'description',
-      type: 'textarea',
-      templateOptions: {
-        placeholder: 'Comments'
-      }
+        key: 'description',
+        type: 'textarea',
+        templateOptions: {
+            placeholder: 'Comments'
+        }
+    },
+    {
+        key: 'awesomeness',
+        type: 'range',
+        templateOptions: {
+            label: 'Awesomeness',
+            rangeClass: "calm",
+            min: '0',
+            max: '100',
+            step: '5',
+            value: '25',
+            minIcon: 'ion-arrow-graph-down-left',
+            maxIcon: 'ion-arrow-graph-up-right'
+
+        }
     }
   ];
 

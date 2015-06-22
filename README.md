@@ -202,6 +202,20 @@ And completely delete the files that we aren't using at all
 
 `./www/templates/tab-dash.html`
 
+Serve with Ionic and run in ios emulator
+
+```bash
+ionic serve
+```
+
+```bash
+ionic platform add ios
+```
+
+```bash
+ionic run ios
+```
+
 ## Step 2
 
 `ionic upload`

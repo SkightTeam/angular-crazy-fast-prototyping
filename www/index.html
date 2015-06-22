@@ -5,21 +5,46 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
 
-    <link href="lib/ionic/release/css/ionic.css" rel="stylesheet">
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
 
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <script src="lib/api-check/dist/api-check.js"></script>
+    <script src="lib/angular-formly/dist/formly.js"></script>
+    <script src="lib/angular-formly-templates-ionic/dist/angular-formly-templates-ionic.js"></script>
+
+    <script src="lib/firebase/firebase.js"></script>
+    <script src="lib/angularfire/dist/angularfire.js"></script>
+
+    <!-- Auth0 Lock -->
+    <script src="lib/auth0-lock/build/auth0-lock.js"></script>
+    <!-- auth0-angular -->
+    <script src="lib/auth0-angular/build/auth0-angular.js"></script>
+    <!-- angular storage -->
+    <script src="lib/a0-angular-storage/dist/angular-storage.js"></script>
+    <!-- angular-jwt -->
+    <script src="lib/angular-jwt/dist/angular-jwt.js"></script>
+
+    <!-- your app's js -->
+    <script src="js/app.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/services.js"></script>
   </head>
-  <body ng-app="starter" animation="slide-left-right-ios7">
+  <body ng-app="starter">
     <!--
       The nav bar that will be updated as we navigate between views.
     -->
-    <ion-nav-bar class="bar-stable nav-title-slide-ios7">
-      <ion-nav-back-button class="button-icon icon  ion-ios7-arrow-back">
-        Back
+    <ion-nav-bar class="bar-stable">
+      <ion-nav-back-button>
       </ion-nav-back-button>
     </ion-nav-bar>
     <!--
@@ -28,31 +53,5 @@
       have templates inline in this html file if you'd like).
     -->
     <ion-nav-view></ion-nav-view>
-
-
-    <script src="lib/auth0-lock/build/auth0-lock.js"></script>
-
-    <!-- ionic/angularjs js -->
-    <script src="lib/ionic/release/js/ionic.bundle.js"></script>
-
-    <script src="lib/auth0-angular/build/auth0-angular.js"></script>
-    <script src="lib/a0-angular-storage/dist/angular-storage.js"></script>
-    <script src="lib/angular-jwt/dist/angular-jwt.js"></script>
-    <script src="lib/firebase/firebase.js"></script>
-    <script src="lib/angularfire/dist/angularfire.js"></script>
-
-    <!-- formly dependencies -->
-    <script src="lib/api-check/dist/api-check.js"></script>
-    <script src="lib/angular-formly/dist/formly.js"></script>
-    <script src="lib/angular-formly-templates-ionic/dist/angular-formly-templates-ionic.js"></script>
-
-    <!-- cordova script (this will be a 404 during development) -->
-    <script src="cordova.js"></script>
-
-    <!-- your app's js -->
-    <script src="js/auth0-variables.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/controllers.js"></script>
-    <script src="js/services.js"></script>
   </body>
 </html>

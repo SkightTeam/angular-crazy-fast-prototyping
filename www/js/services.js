@@ -1,40 +1,40 @@
-angular.module('starter.services', ['firebase'])
+angular.module('starter.services', [])
 
-/**
- * A simple example service that returns some data.
- */
-.service('Friends', function($firebaseArray, store, $state) {
+.factory('Compliments', function($firebaseArray, store, $state) {
+  // Might use a resource here that returns a JSON array
 
-  var friendsRef = new Firebase("https://angularu2015.firebaseio.com/friends");
-  friendsRef.authWithCustomToken(store.get('firebaseToken'), function(error, auth) {
-    if (error) {
-      // There was an error logging in, redirect the user to login page
-      $state.go('login');
+  // Some fake testing data
+  var compliments = [{
+    id: 0,
+    name: 'Ben Sparrow',
+    description: 'Kindly help the door open'
+  }];
+
+  var complimentsRef = new Firebase("https://angularu2015.firebaseio.com/compliments");
+
+  // complimentsRef.authWithCustomToken(store.get('firebaseToken'), function(error, auth) {
+  //   if (error) {
+  //     // There was an error logging in, redirect the user to login page
+  //     $state.go('tab.account');
+  //   }
+  // });
+
+  var compliments = $firebaseArray(complimentsRef);
+
+  return {
+    all: function() {
+      return compliments;
+    },
+    remove: function(compliment) {
+      compliments.splice(compliments.indexOf(compliment), 1);
+    },
+    add: function(compliment){
+      compliments.$add(compliment);
+    },
+    get: function(complimentId) {
+      return compliments.$getRecord(complimentId);
     }
-  });
-
-  var friends = $firebaseArray(friendsRef);
-
-  this.all = function() {
-    return friends;
   };
-
-  this.add = function(friend) {
-    friends.$add(friend);
-  };
-
-  this.get = function(id) {
-    return friends.$getRecord(id);
-  };
-
-  this.save = function(friend) {
-    friends.$save(friend);
-  };
-
-  this.delete = function(friend) {
-    friends.$remove(friend);
-  };
-
 })
 .factory('Camera', ['$q', function($q) {
 

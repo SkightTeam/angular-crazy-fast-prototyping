@@ -1,7 +1,6 @@
-<ion-view title="Account">
-  <ion-content class="has-header padding">
-    <button class="button button-positive button-block" ng-click="logout()">
-    Logout
-    </button>
+<ion-view view-title="Account">
+  <ion-content>
+    <input ng-if="!authenticated" type="submit" class="button-block button-positive button" value="Login" ng-click="login()" />
+    <input ng-if="authenticated" type="submit" ng-click="logout()" value="Log out" class="button-block button-positive button"/>
   </ion-content>
 </ion-view>

@@ -1,43 +1,28 @@
 angular.module('starter.controllers', [])
 
-.controller('LoginCtrl', function($scope, auth, $state, store) {
-  auth.signin({
-    closable: false,
-    // This asks for the refresh token
-    // So that the user never has to log in again
-    authParams: {
-      scope: 'openid offline_access'
+.controller('ComplimentsCtrl', function($scope, $ionicModal, Compliments, Camera) {
+
+  $scope.formFields = [
+    {
+      key: 'name',
+      type: 'input',
+      templateOptions: {
+        type:'text',
+        placeholder: 'Name'
+      }
+    },
+    {
+      key: 'description',
+      type: 'textarea',
+      templateOptions: {
+        placeholder: 'Comments'
+      }
     }
-  }, function(profile, idToken, accessToken, state, refreshToken) {
-    store.set('profile', profile);
-    store.set('token', idToken);
-    store.set('refreshToken', refreshToken);
-    auth.getToken({
-      api: 'firebase'
-    }).then(function(delegation) {
-      store.set('firebaseToken', delegation.id_token);
-      $state.go('tab.friends');
-    }, function(error) {
-      console.log("There was an error logging in", error);
-    })
-  }, function(error) {
-    console.log("There was an error logging in", error);
-  });
-})
+  ];
 
+  $scope.compliments = Compliments.all();
 
-.controller('FriendsCtrl', function($scope, Friends, Camera, $ionicModal) {
-
-  //setting logic for ionic modal
- $ionicModal.fromTemplateUrl('templates/friend-add-modal.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function(modal) {
-    $scope.modal = modal;
-  });
-
-  $scope.friends = Friends.all();
-  $scope.formData = {};
+  $scope.newCompliment = {};
 
   //use phone camera to take image
   $scope.takePhoto = function() {
@@ -49,7 +34,7 @@ angular.module('starter.controllers', [])
     })
       .then(function(imageURI) {
         $scope.imageURI = "data:image/jpeg;base64," + imageURI;
-        $scope.formData.image = "data:image/jpeg;base64," + imageURI;
+        $scope.newCompliment.image = "data:image/jpeg;base64," + imageURI;
       }, function(err) {
         console.error(err);
       });
@@ -64,97 +49,83 @@ angular.module('starter.controllers', [])
     })
       .then(function(imageURI) {
         $scope.imageURI = "data:image/jpeg;base64," + imageURI;   
-        $scope.formData.image = "data:image/jpeg;base64," + imageURI;  
+        $scope.newCompliment.image = "data:image/jpeg;base64," + imageURI;  
       }, function(err) {
           console.error(err);
       });
   };
 
-  $scope.showAddFriend = function() {
+  //setting logic for ionic modal
+ $ionicModal.fromTemplateUrl('templates/compliment-add-modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  //show modal
+  $scope.showAddCompliment = function() {
     $scope.modal.show();
   };
 
-  $scope.addFriend = function() {
-    if(!$scope.formData.$id) {
-      Friends.add($scope.formData);
-    } else {
-      Friends.save($scope.formData);
-    }
-    $scope.formData = {};
-    $scope.imageURI = undefined;
-    $scope.modal.hide();
-  };
-
-  $scope.cancel = function(){
-    $scope.formData = {};
-    $scope.imageURI = undefined;
-    $scope.modal.hide();
-  };
-
-  
-  $scope.formFields = [
-      {
-          //the key to be used in the model values {... "username": "johndoe" ... }
-          key: 'name',
-          type: 'input',
-          templateOptions: {
-              type: 'text',
-              placeholder: 'Name',
-          }
-      },         
-      {
-          //the key to be used in the model values {... "username": "johndoe" ... }
-          key: 'description',
-          type: 'textarea',
-          templateOptions: {
-              placeholder: 'Description',
-          }
-      },{
-          key: 'kindness',
-          type: 'range',
-          templateOptions: {
-              label: 'Kindness',
-              rangeClass: 'calm',
-              min: '0',
-              max: '100',
-              step: '5',
-              value: '25',
-              minIcon: 'ion-heart-broken',
-              maxIcon: 'ion-heart'
-          }
-      }
-
-  ];
-
-  $scope.deleteFriend = function(friend) {
-    Friends.delete(friend);
-  };
-
-  $scope.editFriend = function(friend) {
-    $scope.newFriend = friend;
-    $scope.modal.show();
-  };
-
+  //close modal
   $scope.close = function() {
+    $scope.newCompliment = {};
     $scope.modal.hide();
   };
 
+  $scope.save = function() {
+    Compliments.add($scope.newCompliment);
+    $scope.newCompliment = {};
+    $scope.modal.hide();
+  };
+
+  //remove modal instance when controller is destroyed
   $scope.$on('$destroy', function() {
     $scope.modal.remove();
   });
+
 })
 
-.controller('FriendDetailCtrl', function($scope, $stateParams, Friends) {
-  $scope.friend = Friends.get($stateParams.friendId);
+.controller('ComplimentsDetailCtrl', function($scope, $stateParams, Compliments) {
+  $scope.compliment = Compliments.get($stateParams.complimentsId);
+  console.log($scope.compliment, $stateParams);
 })
 
-.controller('AccountCtrl', function($scope, auth, $state, store) {
+.controller('AccountCtrl', function(store, $scope, $location, auth, $state) {
+
+  
+
+  $scope.authenticated = auth.isAuthenticated;
+
+  console.log('authenticated> ', $scope.authenticated);
+
+  $scope.login = function() {
+    auth.signin({
+      authParams: {
+        scope: 'openid offline_access',
+        device: 'Mobile device'
+      }
+    }, function(profile, token, accessToken, state, refreshToken) {
+
+      $scope.authenticated = true;
+      // Success callback
+      store.set('profile', profile);
+      store.set('token', token);
+      store.set('refreshToken', refreshToken);
+      //$location.path('/');
+      $state.go('tab.compliments');
+      
+    }, function() {
+      // Error callback
+    });
+  };
 
   $scope.logout = function() {
     auth.signout();
-    store.remove('token');
     store.remove('profile');
-    store.remove('refreshToken');
-    $state.go('login');
-  }
+    store.remove('token');
+    $scope.authenticated = false;
+  };
+
 });

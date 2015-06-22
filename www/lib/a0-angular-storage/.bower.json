@@ -35,6 +35,6 @@
     "commit": "47f5608ef80425904402dd307d6f0dd7b78d9bb7"
   },
   "_source": "git://github.com/auth0/angular-storage.git",
-  "_target": ">= 0.0.11",
+  "_target": ">= 0.0.6",
   "_originalSource": "a0-angular-storage"
 }

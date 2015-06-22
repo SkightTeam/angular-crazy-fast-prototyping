@@ -44,5 +44,6 @@
   },
   "_source": "git://github.com/formly-js/angular-formly-templates-ionic.git",
   "_target": "~0.3.0",
-  "_originalSource": "angular-formly-templates-ionic"
+  "_originalSource": "angular-formly-templates-ionic",
+  "_direct": true
 }

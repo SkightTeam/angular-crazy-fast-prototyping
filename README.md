@@ -82,6 +82,23 @@ Add formly directive to partial
     </form>
   </ion-content>
 </ion-modal-view>
+
+<!-- add new data to compliments-detail.html -->
+<ion-view title="{{compliment.name}}">
+  <ion-content has-header="true" padding="true">
+    <div class="list card">
+      <div class="item">
+        <h2>{{compliment.name}}</h2>
+      </div>
+      <div class="item item-body">
+      <strong>Awesomeness: {{compliment.awesomeness}}</strong>
+        <p>
+          {{compliment.description}}
+        </p>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
 ```
 
 We are using a version of Formly tailored for Ionic

@@ -1,8 +1,8 @@
-# AngularU
+# Crazy Fast Prototyping
 
-Crazy Fast Prototyping
+## Step 2
 
-`$ ionic upload`
+`ionic upload`
 
 Download Ionic View onto your phone and sync your account
 

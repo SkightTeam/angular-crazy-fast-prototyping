@@ -6,7 +6,7 @@ Make Your Angular App a Maximum Security Prison
 #### Add Cordova Camera Plugin
 
 ```
-cordova plugin add org.apache.cordova.camera
+cordova plugin add cordova-plugin-camera
 ```
 
 #### Create Camera Service

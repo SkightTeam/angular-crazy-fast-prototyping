@@ -1,5 +1,6 @@
 # AngularU
-Make Your Angular App a Maximum Security Prison
+
+Crazy Fast Prototyping
 
 ### Install Formly with Bower
 

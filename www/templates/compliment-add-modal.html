@@ -8,21 +8,10 @@
   <ion-content class="padding">
     <form >
       <formly-form model="newCompliment" fields="formFields">
-        <div class="row">
-          <div class="col">
-            <button class="button button-block" ng-click="takePhoto()">Take A Photo</button>
-          </div>
-          <div class="col">
-            <button class="button button-block" ng-click="selectPhoto()">Choose A Photo</button>
-          </div>
-        </div>
         <button class="button button-block button-positive" ng-click="save()">
           Save
         </button>
       </formly-form>
     </form>
-    <div class="friend-photo">
-        <img ng-src="{{imageURI}}" ng-if="imageURI">
-    </div>
   </ion-content>
 </ion-modal-view>

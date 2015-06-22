@@ -7,7 +7,7 @@ Crazy Fast Prototyping
 https://www.firebase.com/docs/web/libraries/angular/quickstart.html
 
 ```bash
-bower install firebase angularfire
+bower install firebase angularfire --save
 ```
 
 ```html

@@ -1,18 +1,19 @@
-# AngularU
+# Crazy Fast Prototyping
 
-Crazy Fast Prototyping
+## Step 5
 
-### Cordova Plugins
+Cordova Plugins
 
-#### Add Cordova Camera Plugin
+Add Cordova Camera Plugin
 
 ```
 cordova plugin add cordova-plugin-camera
 ```
 
-#### Create Camera Service
+Create Camera Service
 
 ```js
+//added to our services.js file
 .factory('Camera', ['$q', function($q) {
 
 
@@ -36,10 +37,14 @@ cordova plugin add cordova-plugin-camera
 }]);
 ```
 
-#### Add logic to controller
+Add logic to controller
 
 ```js
-//use phone camera to take image
+//added to controllers.js ComplimentsCtrl
+
+.controller('ComplimentsCtrl', function($scope, $ionicModal, Compliments, Camera) {
+
+  //use phone camera to take image
   $scope.takePhoto = function() {
     Camera.getPicture({
       sourceType:1,   //camera
@@ -54,7 +59,7 @@ cordova plugin add cordova-plugin-camera
         console.error(err);
       });
     };
-    
+
   $scope.selectPhoto = function(){
     Camera.getPicture({
       sourceType:0,   //photo album,
@@ -69,12 +74,15 @@ cordova plugin add cordova-plugin-camera
           console.error(err);
       });
   };
+
+  ......
+
 ```
 
-#### Update templates
+Update templates
 
 ```html
-<!-- add comliment -->
+<!-- compliments-add-modal.html -->
 <ion-modal-view>
   <ion-header-bar>
     <div class="buttons">
@@ -104,32 +112,30 @@ cordova plugin add cordova-plugin-camera
   </ion-content>
 </ion-modal-view>
 
-<!-- comliment detail -->
+<!-- comliments-detail.html -->
 <ion-view title="{{compliment.name}}">
   <ion-content has-header="true" padding="true">
     <div class="list card">
-
       <div class="item item-avatar">
         <img ng-src="{{compliment.image}}">
         <h2>{{compliment.name}}</h2>
       </div>
-
       <div class="item item-body">
         <p>
           {{compliment.description}}
         </p>
       </div>
-
     </div>
   </ion-content>
 </ion-view>
 ```
 
-### Add custom styles
+Add custom styles
 
 ```css
+/* added to styles.css */
 .friend-photo img {
-	max-width: 100%;
-	height: auto;
+  max-width: 100%;
+  height: auto;
 }
 ```
